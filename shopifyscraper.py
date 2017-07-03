@@ -4,8 +4,10 @@ import requests
 from bs4 import BeautifulSoup
 import random
 import sys
+from fake_useragent import UserAgent
 
 def scrapeUrlsFromFile(urls,keyword,outputlist):
+    ua = UserAgent()
     matches = []
     for url in urls:
         if len(url) == 0:
@@ -14,7 +16,7 @@ def scrapeUrlsFromFile(urls,keyword,outputlist):
             c  = requests.session()
             print "["+str(datetime.now())+"]Scraping "+str(url)
             try:
-                r = c.get(url, headers={'User-Agent':"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36"}).content
+                r = c.get(url, headers={'User-Agent':str(ua.random)}).content
                 soup = BeautifulSoup(r,'html.parser')
             except Exception, e:
                 print "["+str(datetime.now())+"]Could not scrape "+str(url)
@@ -38,12 +40,13 @@ def scrapeUrlsFromFile(urls,keyword,outputlist):
 
 def scrapeUrl(url,keyword,outputlist):
         matches = []
+        ua = UserAgent()
         if len(url) == 0:
             sys.exit('[-]Invalid url')
         else:
             c  = requests.session()
             print "["+str(datetime.now())+"]Scraping "+str(url)
-            r = c.get(url, headers={'User-Agent':"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36"}).content
+            r = c.get(url, headers={'User-Agent':str(ua.random)}).content
             soup = BeautifulSoup(r,'html.parser')
             for itemlink in soup.find_all('loc'):
                 itemlink = itemlink.text
